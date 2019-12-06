@@ -1,0 +1,70 @@
+{
+  "programs": [
+    {
+      "method": "write@77",
+      "body": "/** \n * @see ByteHolder#write\n * @exception IOException\t\tThrown on error\n */\npublic void write(int b) throws IOException {\n  if (SanityManager.DEBUG)   SanityManager.ASSERT(writing == true,\"Writing should be true 1\");\n  if (curBufPos >= curBuf.length)   getNextBuffer_w();\n  curBuf[curBufPos++]=(byte)b;\n}\n",
+      "formalParam": [
+        "int"
+      ],
+      "ast": {
+        "node": "DSubTree",
+        "_nodes": [
+          {
+            "node": "DBranch",
+            "_else": [],
+            "_cond": [
+              {
+                "_call": "java.util.Vector.size()",
+                "node": "DAPICall",
+                "_returns": "int",
+                "_throws": []
+              }
+            ],
+            "_then": [
+              {
+                "_call": "java.util.Vector.addElement(java.lang.Object)",
+                "node": "DAPICall",
+                "_returns": "void",
+                "_throws": []
+              }
+            ]
+          }
+        ]
+      },
+      "returnType": "void",
+      "file": "./java_projects/derby/java/engine/org/apache/derby/impl/store/raw/data/MemByteHolder.java",
+      "types": [
+        "Vector",
+        "Object",
+        "Integer"
+      ],
+      "apicalls": [
+        "size",
+        "addElement"
+      ],
+      "sequences": [
+        {
+          "calls": [
+            "java.util.Vector.size()",
+            "java.util.Vector.addElement(java.lang.Object)"
+          ]
+        },
+        {
+          "calls": [
+            "java.util.Vector.size()"
+          ]
+        }
+      ],
+      "keywords": [
+        "java",
+        "add",
+        "element",
+        "size",
+        "util",
+        "vector",
+        "object",
+        "integer"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "programs": [
+    {
+      "method": "convertToString@14",
+      "body": "public static String convertToString(InputStream is) throws Exception {\n  BufferedReader reader=new BufferedReader(new InputStreamReader(is),8192);\n  StringBuffer sb=new StringBuffer();\n  String line=null;\n  try {\n    while ((line=reader.readLine()) != null) {\n      sb.append(line + \"\\n\");\n    }\n  }\n  finally {\n    is.close();\n  }\n  return sb.toString();\n}\n",
+      "formalParam": [
+        "InputStream"
+      ],
+      "ast": {
+        "node": "DSubTree",
+        "_nodes": [
+          {
+            "_call": "java.io.InputStreamReader.InputStreamReader(java.io.InputStream)",
+            "_throws": [],
+            "node": "DAPICall",
+            "_returns": "void"
+          },
+          {
+            "_call": "java.io.BufferedReader.BufferedReader(java.io.Reader,int)",
+            "_throws": [],
+            "node": "DAPICall",
+            "_returns": "void"
+          },
+          {
+            "_call": "java.lang.StringBuffer.StringBuffer()",
+            "_throws": [],
+            "node": "DAPICall",
+            "_returns": "void"
+          },
+          {
+            "node": "DLoop",
+            "_body": [
+              {
+                "_call": "java.lang.StringBuffer.append(java.lang.String)",
+                "_throws": [],
+                "node": "DAPICall",
+                "_returns": "java.lang.StringBuffer"
+              }
+            ],
+            "_cond": [
+              {
+                "_call": "java.io.BufferedReader.readLine()",
+                "_throws": [
+                  "java.io.IOException"
+                ],
+                "node": "DAPICall",
+                "_returns": "java.lang.String"
+              }
+            ]
+          },
+          {
+            "_call": "java.io.InputStream.close()",
+            "_throws": [
+              "java.io.IOException"
+            ],
+            "node": "DAPICall",
+            "_returns": "void"
+          },
+          {
+            "_call": "java.lang.StringBuffer.toString()",
+            "_throws": [],
+            "node": "DAPICall",
+            "_returns": "java.lang.String"
+          }
+        ]
+      },
+      "returnType": "String",
+      "file": "./java_projects/PearsonDictionaryAndroid/src/com/pearson/pandpsample/dictionary/remote/InputStreamConverter.java",
+      "types": [
+        "Reader",
+        "Integer",
+        "InputStreamReader",
+        "InputStream",
+        "IOException",
+        "String",
+        "BufferedReader",
+        "StringBuffer"
+      ],
+      "apicalls": [
+        "readLine",
+        "append",
+        "close",
+        "toString"
+      ]
+    }
+  ]
+}
