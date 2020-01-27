@@ -47,7 +47,7 @@ class ModelSettings:
     should be saved and where.
     """
 
-    def __init__(self, data_path, config_path, save_outputs, saved_model_path=None, test_mode=False):
+    def __init__(self, data_path, config_path, save_outputs, saved_model_path=None, test_mode=False, validation_data_path=None, test_data_path=None):
         self.data_path = data_path
         self.config_path = config_path
 
@@ -67,6 +67,12 @@ class ModelSettings:
             self.saved_model_path = saved_model_path
 
         self.test_mode = test_mode
+
+        if validation_data_path is not None:
+            self.validation_data_path = validation_data_path
+
+        if test_data_path is not None:
+            self.test_data_path = test_data_path
 
 
 def read_config(js):
@@ -345,7 +351,7 @@ class ASTDataset(data.Dataset):
     Custom Dataset class for PyTorch VRNN
     """
 
-    def __init__(self, model_settings):
+    def __init__(self, model_settings, validation=False, test=False):
         self.model_settings = model_settings
         with open(model_settings.config_path) as f:
             config = read_config(json.load(f))
@@ -358,7 +364,17 @@ class ASTDataset(data.Dataset):
         infer = False
         self.decoder_api_dict = decoderDict(infer, self.config.decoder)
 
-        f = open(model_settings.data_path, 'rb')
+        assert(not (validation and test))
+
+        if validation:
+            assert(model_settings.validation_data_path is not None)
+            f = open(model_settings.validation_data_path, 'rb')
+        elif test:
+            assert(model_settings.test_data_path is not None)
+            f = open(model_settings.test_data_path, 'rb')
+        else:
+            f = open(model_settings.data_path, 'rb')
+
         for program in ijson.items(f, 'programs.item'):
             try:
                 ast_node_graph = get_ast_from_json(program['ast']['_nodes'])
@@ -391,10 +407,15 @@ class ASTDataset(data.Dataset):
             if done % 100000 == 0:
                 print('Extracted data for {} programs'.format(done), end='\n')
                 # break
-
-        print('{:8d} programs/asts in training data'.format(done))
-        print('{:8d} programs/asts missed in training data for loop'.format(ignored_for_loop))
-        print('{:8d} programs/asts missed in training data for branch'.format(ignored_for_branch))
+        if validation:
+            dataset_type = "validation"
+        elif test:
+            dataset_type = "testing"
+        else:
+            dataset_type = "training"
+        print('{:8d} programs/asts in {} data'.format(done, dataset_type))
+        print('{:8d} programs/asts missed in {} data for loop'.format(ignored_for_loop, dataset_type))
+        print('{:8d} programs/asts missed in {} data for branch'.format(ignored_for_branch, dataset_type))
 
         # randomly shuffle to avoid bias towards initial data points during training
         random.shuffle(data_points)
